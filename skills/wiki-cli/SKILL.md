@@ -1,6 +1,6 @@
 ---
 name: wiki-cli
-description: "Default vault-mutation transport for claude-obsidian v1.7+. Wraps the Obsidian CLI (Obsidian 1.12+) as the preferred way to read, write, search, and modify vault notes from Claude — no MCP server, no REST API plugin, no TLS workarounds. Falls back to direct filesystem Read/Write/Edit when the CLI is unavailable. Triggers on: wiki-cli, obsidian cli, obsidian read, obsidian write, obsidian search, daily note, obsidian create, obsidian append, vault transport, which transport, transport detection, obsidian command line."
+description: "Default vault-mutation transport for claude-obsidian v1.7+. Wraps the Obsidian CLI (Obsidian 1.12+) as the preferred way to read, write, search, and modify vault notes from the agent — no MCP server, no REST API plugin, no TLS workarounds. Falls back to direct filesystem Read/Write/Edit when the CLI is unavailable. Triggers on: wiki-cli, obsidian cli, obsidian read, obsidian write, obsidian search, daily note, obsidian create, obsidian append, vault transport, which transport, transport detection, obsidian command line."
 allowed-tools: Read Bash
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: Read Bash
 
 claude-obsidian v1.7+ standardizes on the **Obsidian CLI** (shipped with Obsidian 1.12) as the preferred transport for all vault mutations on desktop. This skill is the recipe reference for using it.
 
-**Substrate preference (v1.7+)**: This skill is a self-contained fallback. **Prefer `kepano/obsidian-skills`** (by Steph Ango, Obsidian CEO) as the authoritative substrate — its `obsidian-cli` skill is the canonical CLI reference for any Agent-Skills runtime. If you see an `obsidian-cli` skill available without the `claude-obsidian:` namespace, that is kepano's version: use it. The recipes below are provided so claude-obsidian remains functional when kepano's marketplace is not installed. Install kepano: `claude plugin marketplace add kepano/obsidian-skills`.
+**Substrate preference (v1.7+)**: This skill is a self-contained fallback. **Prefer `kepano/obsidian-skills`** (by Steph Ango, Obsidian CEO) as the authoritative substrate — its `obsidian-cli` skill is the canonical CLI reference for any Agent-Skills runtime. If you see an `obsidian-cli` skill available without the `copilot-obsidian:` namespace, that is kepano's version: use it. The recipes below are provided so claude-obsidian remains functional when kepano's marketplace is not installed. Install kepano: `copilot plugin install kepano/obsidian-skills`.
 
 ---
 
@@ -20,7 +20,7 @@ claude-obsidian v1.7+ standardizes on the **Obsidian CLI** (shipped with Obsidia
 | Auth | API key + TLS bypass (`NODE_TLS_REJECT_UNAUTHORIZED=0`) | None — direct subprocess |
 | Latency | HTTP round-trip per call | In-process binary |
 | Failure mode | Plugin disabled → silent breakage | Binary missing → loud `command -v` failure |
-| Reentrancy | Self-MCP-calls inside Claude session can deadlock | Pure subprocess, safe |
+| Reentrancy | Self-MCP-calls inside an agent session can deadlock | Pure subprocess, safe |
 | Mobile / headless | Limited | Limited (CLI is desktop-only too) |
 
 CLI loses to MCP on exactly one axis: it only works on machines where Obsidian itself is installed. For headless servers and mobile, fall through to the next transport in the chain.
@@ -68,7 +68,7 @@ Each recipe shows the CLI form first. If the CLI is unavailable per the detectio
 # CLI
 obsidian-cli read "$VAULT" "$NOTE"
 
-# Fallback: Claude's Read tool with absolute path
+# Fallback: the agent's Read tool with absolute path
 # Read $VAULT/$NOTE
 ```
 
@@ -77,7 +77,7 @@ obsidian-cli read "$VAULT" "$NOTE"
 # CLI
 obsidian-cli write "$VAULT" "$NOTE" < /path/to/content.md
 
-# Fallback: Claude's Write tool with absolute path
+# Fallback: the agent's Write tool with absolute path
 # Write $VAULT/$NOTE with the desired content string
 ```
 

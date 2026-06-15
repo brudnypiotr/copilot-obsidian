@@ -25,7 +25,7 @@ The research loop writes a lot — source pages, concept pages, entity pages, ma
 
 - **cli** — `obsidian-cli write "$VAULT" "$NOTE" < content.md`; see [`skills/wiki-cli/SKILL.md`](../wiki-cli/SKILL.md)
 - **mcp-obsidian** / **mcpvault** — `mcp__obsidian-vault__write_note`
-- **filesystem** — Claude's `Write` tool with absolute path
+- **filesystem** — the agent's `Write` tool with absolute path
 
 Full decision tree: [`wiki/references/transport-fallback.md`](../../wiki/references/transport-fallback.md). Web fetches (`WebFetch`/`WebSearch`) are transport-agnostic.
 
@@ -53,7 +53,7 @@ Autoresearch calls `WebFetch` and `WebSearch` to pull arbitrary URLs. Before eac
 - RFC1918 private addresses (`10.x.x.x`, `172.16-31.x.x`, `192.168.x.x`) and `localhost`/`127.0.0.1` — these would target the user's internal network
 - Hosts not surfaced by the prior `WebSearch` step (be conservative; do not follow redirects to domains that never appeared in search results)
 
-The Claude Code `WebFetch` tool has built-in defenses against many of these. Apply them here as defense-in-depth.
+The agent's `WebFetch` tool has built-in defenses against many of these. Apply them here as defense-in-depth.
 
 **2. Content sanitization before writing fetched HTML into a wiki page.** Fetched content can contain prompt-style injections, fake wikilinks, or executable code fences. Before any `Write` to `wiki/sources/<source>.md`:
 - Strip `<script>`, `<iframe>`, `<style>` tags and their contents
@@ -61,7 +61,7 @@ The Claude Code `WebFetch` tool has built-in defenses against many of these. App
 - Reject any `---` YAML-frontmatter delimiter inside fetched content — the source page's frontmatter is authored by the loop, not by the upstream source
 - Truncate fetched bodies to ~50KB to avoid context blowout
 
-**3. Per-loop cost expectation.** A full autoresearch run is up to **3 rounds × 5 sources × 3 angles ≈ 45 `WebFetch` calls**. WebFetch is metered through the Anthropic plan. The `max_pages: 15` cap in `references/program.md` limits FILING cost but does NOT cap FETCH count. Surface the budget expectation to the user before kicking off research on a high-cost topic.
+**3. Per-loop cost expectation.** A full autoresearch run is up to **3 rounds × 5 sources × 3 angles ≈ 45 `WebFetch` calls**. WebFetch is metered through the agent's plan/quota. The `max_pages: 15` cap in `references/program.md` limits FILING cost but does NOT cap FETCH count. Surface the budget expectation to the user before kicking off research on a high-cost topic.
 
 **4. Failure mode.** If a fetch fails (timeout, 4xx/5xx, content too large, sanitization removed everything), log the URL + reason to `wiki/log.md` and continue the loop. Do NOT abort the whole run. Do NOT silently swallow — every skipped source is a fact the user needs in the synthesis page's "Open Questions" section.
 
@@ -292,7 +292,22 @@ When working on this skill, apply the 10-principle loop. See [`skills/think/SKIL
 | 4 | THINK | 3-5 distinct search angles that cover the topic without overlap; credibility-weighted source filter. |
 | 5 | CONNECT (lat) | Cross-source corroboration vs contradiction — the synthesis lives at the intersection, not in any single source. |
 | 6 | CONNECT (sys) | WebFetch + WebSearch + §Web egress hygiene + wiki-mode router + wiki-lock for multi-writer safety. |
-| 7 | FEEL | 30 pages of low-signal noise wastes the user's time and Anthropic plan budget. Quality over volume. |
+| 7 | FEEL | 30 pages of low-signal noise wastes the user's time and the agent plan budget. Quality over volume. |
 | 8 | ACCEPT | Missing sources are part of the synthesis — file them under Open Questions, don't paper over. |
 | 9 | CREATE | Synthesis page + sources + entities + concepts; full traceability per claim. |
 | 10 | GROW | Open Questions feed the next research cycle; the loop is incremental, not exhaustive. |
+
+## Commit pattern (replaces removed PostToolUse hook)
+
+The upstream Claude Code `PostToolUse` hook auto-committed wiki/ changes after every Write/Edit. This fork strips that hook and embeds the commit pattern here. After any write to a wiki page (Write/Edit tools used above), run:
+
+```bash
+bash scripts/wiki-lock.sh acquire <page-path>
+# ... write completes above via Write/Edit tools ...
+git add -- wiki/ .raw/ .vault-meta/ 2>/dev/null
+git diff --cached --quiet -- wiki/ .raw/ .vault-meta/ || \
+  git commit -m "wiki: $(date '+%Y-%m-%d %H:%M')" -- wiki/ .raw/ .vault-meta/
+bash scripts/wiki-lock.sh release <page-path>
+```
+
+Skip the commit if `.vault-meta/auto-commit.disabled` exists (user opt-out).

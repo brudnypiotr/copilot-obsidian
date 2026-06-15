@@ -16,7 +16,7 @@ Reads should prefer the same transport the rest of the plugin uses. Consult `.va
 
 - **cli** — `obsidian-cli read "$VAULT" "$NOTE"` and `obsidian-cli search "$VAULT" "<query>"` (Obsidian-native ranking); see [`skills/wiki-cli/SKILL.md`](../wiki-cli/SKILL.md)
 - **mcp-obsidian** / **mcpvault** — `mcp__obsidian-vault__read_note`, `search_notes`; see [`skills/wiki/references/mcp-setup.md`](../wiki/references/mcp-setup.md)
-- **filesystem** — Claude's `Read` and `Glob`/`Grep` tools (final floor; always works)
+- **filesystem** — the agent's `Read` and `Glob`/`Grep` tools (final floor; always works)
 
 Full decision tree: [`wiki/references/transport-fallback.md`](../../wiki/references/transport-fallback.md). Quick mode (hot.md only) is transport-agnostic — always uses `Read`.
 

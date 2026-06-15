@@ -1,7 +1,7 @@
 ---
 name: wiki
 description: >
-  Claude + Obsidian knowledge companion. Sets up a persistent wiki vault, scaffolds
+  Copilot + Obsidian knowledge companion. Sets up a persistent wiki vault, scaffolds
   structure from a one-sentence description, and routes to specialized sub-skills.
   Use for setup, scaffolding, cross-project referencing, and hot cache management.
   Triggers on: "set up wiki", "scaffold vault", "create knowledge base", "/wiki",
@@ -10,7 +10,7 @@ description: >
 allowed-tools: Read Write Edit Glob Grep Bash
 ---
 
-# wiki: Claude + Obsidian Knowledge Companion
+# wiki: Copilot + Obsidian Knowledge Companion
 
 You are a knowledge architect. You build and maintain a persistent, compounding wiki inside an Obsidian vault. You don't just answer questions. You write, cross-reference, file, and maintain a structured knowledge base that gets richer with every source added and every question asked.
 
@@ -28,7 +28,7 @@ Three layers:
 vault/
 ├── .raw/       # Layer 1: immutable source documents
 ├── wiki/       # Layer 2: LLM-generated knowledge base
-└── CLAUDE.md   # Layer 3: schema and instructions (this plugin)
+└── COPILOT.md   # Layer 3: schema and instructions (this plugin)
 ```
 
 Standard wiki structure:
@@ -124,11 +124,11 @@ Steps:
 5. Create `wiki/index.md`, `wiki/log.md`, `wiki/hot.md`, `wiki/overview.md`.
 6. Create `_templates/` files for each note type.
 7. Apply visual customization. Read `references/css-snippets.md`. Create `.obsidian/snippets/vault-colors.css`.
-8. Create the vault CLAUDE.md using the template below.
+8. Create the vault COPILOT.md using the template below.
 9. Initialize git. Read `references/git-setup.md`.
 10. Present the structure and ask: "Want to adjust anything before we start?"
 
-### Vault CLAUDE.md Template
+### Vault COPILOT.md Template
 
 Create this file in the vault root when scaffolding a new project vault (not this plugin directory):
 
@@ -156,7 +156,7 @@ Created: YYYY-MM-DD
 ## Operations
 
 - Ingest: drop source in .raw/, say "ingest [filename]"
-- Query: ask any question: Claude reads index first, then drills in
+- Query: ask any question: the agent reads index first, then drills in
 - Lint: say "lint the wiki" to run a health check
 - Archive: move cold sources to .archive/ to keep .raw/ clean
 ```
@@ -165,9 +165,9 @@ Created: YYYY-MM-DD
 
 ## Cross-Project Referencing
 
-This is the force multiplier. Any Claude Code project can reference this vault without duplicating context.
+This is the force multiplier. Any Copilot CLI project can reference this vault without duplicating context.
 
-In another project's CLAUDE.md, add:
+In another project's COPILOT.md, add:
 
 ```markdown
 ## Wiki Knowledge Base
@@ -246,7 +246,7 @@ When working on this skill, apply the 10-principle loop. See [`skills/think/SKIL
 | 3 | LISTEN | The user's one-sentence vault description — the whole scaffold flows from this. Ask before assuming. |
 | 4 | THINK | Which folders, templates, substrate (kepano-substrate vs self-hosted)? Pick deliberately, not reflexively. |
 | 5 | CONNECT (lat) | How does this vault relate to the user's other projects? Cross-project reference is a first-class use case. |
-| 6 | CONNECT (sys) | Hooks + `.vault-meta/` + plugin install + CLAUDE.md routing rules wire together at setup. |
+| 6 | CONNECT (sys) | Hooks + `.vault-meta/` + plugin install + COPILOT.md routing rules wire together at setup. |
 | 7 | FEEL | First-run UX is the make-or-break moment for adoption. Confusion at scaffold = abandoned vault. |
 | 8 | ACCEPT | The scaffold is opinionated; don't pretend it's neutral. Document the opinions in the scaffold output. |
 | 9 | CREATE | Scaffold the folders, write `hot.md` + `index.md` + `log.md` with starting structure. |

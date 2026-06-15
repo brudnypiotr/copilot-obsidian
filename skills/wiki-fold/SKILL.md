@@ -230,3 +230,18 @@ When working on this skill, apply the 10-principle loop. See [`skills/think/SKIL
 | 8 | ACCEPT | Dry-run first. Commit only when the self-check passes. Honor the bounded-scope constraint (no fold-of-folds yet). |
 | 9 | CREATE | Fold page at `wiki/folds/<fold-id>.md` linking to all child entries. |
 | 10 | GROW | Fold-of-folds (hierarchical level-stacking) is v_next scope — note as you encounter it, don't sneak it in. |
+
+## Commit pattern (replaces removed PostToolUse hook)
+
+The upstream Claude Code `PostToolUse` hook auto-committed wiki/ changes after every Write/Edit. This fork strips that hook and embeds the commit pattern here. After any write to a wiki page (Write/Edit tools used above), run:
+
+```bash
+bash scripts/wiki-lock.sh acquire <page-path>
+# ... write completes above via Write/Edit tools ...
+git add -- wiki/ .raw/ .vault-meta/ 2>/dev/null
+git diff --cached --quiet -- wiki/ .raw/ .vault-meta/ || \
+  git commit -m "wiki: $(date '+%Y-%m-%d %H:%M')" -- wiki/ .raw/ .vault-meta/
+bash scripts/wiki-lock.sh release <page-path>
+```
+
+Skip the commit if `.vault-meta/auto-commit.disabled` exists (user opt-out).

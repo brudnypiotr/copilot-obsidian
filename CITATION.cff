@@ -1,20 +1,29 @@
 cff-version: 1.2.0
-title: claude-obsidian
+title: copilot-obsidian
 message: >-
   If you use this software, please cite it using the metadata from this file.
 type: software
 authors:
-  - alias: AgriciDaniel
-repository-code: 'https://github.com/AgriciDaniel/claude-obsidian'
-url: 'https://github.com/AgriciDaniel/claude-obsidian'
+  - alias: niumfi
+repository-code: 'https://github.com/niumfi/copilot-obsidian'
+url: 'https://github.com/niumfi/copilot-obsidian'
 license: MIT
-version: 1.9.2
-date-released: '2026-05-28'
+version: 1.0.0
+date-released: '2026-06-15'
 keywords:
   - obsidian
-  - claude-code
+  - copilot-cli
   - knowledge-management
   - second-brain
   - pkm
   - llm-wiki
   - rag
+references:
+  - type: software
+    title: claude-obsidian
+    authors:
+      - alias: AgriciDaniel
+    repository-code: 'https://github.com/AgriciDaniel/claude-obsidian'
+    version: 1.9.2
+    license: MIT
+    notes: Upstream that this fork is derived from.

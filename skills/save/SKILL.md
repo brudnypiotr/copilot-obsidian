@@ -24,7 +24,7 @@ The session-note write itself follows the standard transport policy. Read `.vaul
 
 - **cli** — `obsidian-cli write "$VAULT" "$NOTE" < session.md`; see [`skills/wiki-cli/SKILL.md`](../wiki-cli/SKILL.md)
 - **mcp-obsidian** / **mcpvault** — `mcp__obsidian-vault__write_note`
-- **filesystem** — Claude's `Write` tool with absolute path
+- **filesystem** — the agent's `Write` tool with absolute path
 
 Full decision tree: [`wiki/references/transport-fallback.md`](../../wiki/references/transport-fallback.md). Index/log/hot updates use the same transport.
 
@@ -39,7 +39,7 @@ Before creating the session note, consult the vault's methodology mode via `pyth
 - **PARA**: `wiki/projects/inbox/<date>-<topic>.md` (user reroutes to specific projects)
 - **Zettelkasten**: `wiki/<ID>-session-<topic>.md` (timestamped ID becomes the filename prefix)
 
-If `.vault-meta/mode.json` is absent, the router returns mode=generic paths. **Important global rule**: per global CLAUDE.md `/save` convention, sessions for cross-project work should still file to `~/Documents/Obsidian Vault/sessions/` rather than the project's wiki. The mode router applies when filing to the project's own wiki/, not when filing to the global personal vault.
+If `.vault-meta/mode.json` is absent, the router returns mode=generic paths. **Important global rule**: per global COPILOT.md `/save` convention, sessions for cross-project work should still file to `~/Documents/Obsidian Vault/sessions/` rather than the project's wiki. The mode router applies when filing to the project's own wiki/, not when filing to the global personal vault.
 
 ## Concurrency (v1.7+)
 
@@ -81,10 +81,10 @@ If the user specifies a type, use that. If not, pick the best fit based on the c
 **Step 0: Decide the destination root.** Check in order:
 
 1. **User explicit override.** If the user said "save to this project's wiki" / "save to the personal vault" / a specific path, respect it.
-2. **Project CLAUDE.md or global `~/.claude/CLAUDE.md` `/save` rule.** If either declares a personal-vault destination (e.g., `~/Documents/Obsidian Vault/`), that is the destination ROOT. The Note Type table below describes paths relative to whichever root is active. Append the new note to `<root>/log/ingest-log.md` at the top, in the format that file already uses.
+2. **Project COPILOT.md or global `~/.claude/COPILOT.md` `/save` rule.** If either declares a personal-vault destination (e.g., `~/Documents/Obsidian Vault/`), that is the destination ROOT. The Note Type table below describes paths relative to whichever root is active. Append the new note to `<root>/log/ingest-log.md` at the top, in the format that file already uses.
 3. **Default.** The project's own `wiki/` folder.
 
-The mode router (`python3 scripts/wiki-mode.py route session "<topic>"`) applies when filing into the project's own `wiki/`. When filing into a personal-vault root, use the canonical folders documented in that vault's CLAUDE.md (commonly `sessions/`, `concepts/`, `sources/`) — the mode router is NOT consulted for personal-vault writes by default. Filename sanitization (slug + safe_name) still applies regardless of root: strip path separators, NUL bytes, control chars, leading dots/hyphens.
+The mode router (`python3 scripts/wiki-mode.py route session "<topic>"`) applies when filing into the project's own `wiki/`. When filing into a personal-vault root, use the canonical folders documented in that vault's COPILOT.md (commonly `sessions/`, `concepts/`, `sources/`) — the mode router is NOT consulted for personal-vault writes by default. Filename sanitization (slug + safe_name) still applies regardless of root: strip path separators, NUL bytes, control chars, leading dots/hyphens.
 
 **Then continue the workflow:**
 
@@ -142,7 +142,7 @@ status: active
 ## Writing Style
 
 - Declarative, present tense. Write the knowledge, not the conversation.
-- Not: "The user asked about X and Claude explained..."
+- Not: "The user asked about X and the agent explained..."
 - Yes: "X works by doing Y. The key insight is Z."
 - Include all relevant context. Future sessions should be able to read this page cold.
 - Link every mentioned concept, entity, or wiki page with wikilinks.
@@ -185,3 +185,18 @@ When working on this skill, apply the 10-principle loop. See [`skills/think/SKIL
 | 8 | ACCEPT | Some sessions don't deserve saving. Honor the Skip criteria; don't archive everything. |
 | 9 | CREATE | Write the note, append to log at top, update index, refresh hot cache. |
 | 10 | GROW | Skipped saves are also signal — what threshold filtered them? Refine the type table over time. |
+
+## Commit pattern (replaces removed PostToolUse hook)
+
+The upstream Claude Code `PostToolUse` hook auto-committed wiki/ changes after every Write/Edit. This fork strips that hook and embeds the commit pattern here. After any write to a wiki page (Write/Edit tools used above), run:
+
+```bash
+bash scripts/wiki-lock.sh acquire <page-path>
+# ... write completes above via Write/Edit tools ...
+git add -- wiki/ .raw/ .vault-meta/ 2>/dev/null
+git diff --cached --quiet -- wiki/ .raw/ .vault-meta/ || \
+  git commit -m "wiki: $(date '+%Y-%m-%d %H:%M')" -- wiki/ .raw/ .vault-meta/
+bash scripts/wiki-lock.sh release <page-path>
+```
+
+Skip the commit if `.vault-meta/auto-commit.disabled` exists (user opt-out).

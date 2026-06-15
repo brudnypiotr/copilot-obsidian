@@ -19,7 +19,7 @@ Lint primarily reads, then writes a single report file. Both follow the standard
 
 - **cli** — `obsidian-cli read "$VAULT" "$NOTE"` for individual reads; `obsidian-cli backlinks "$VAULT" "$NOTE"` natively handles backlink graph (avoids re-rolling it via Grep); see [`skills/wiki-cli/SKILL.md`](../wiki-cli/SKILL.md)
 - **mcp-obsidian** / **mcpvault** — `mcp__obsidian-vault__read_multiple_notes`, `list_all_tags`
-- **filesystem** — Claude's `Read`/`Glob`/`Grep` (final floor; current v1.6 behavior)
+- **filesystem** — the agent's `Read`/`Glob`/`Grep` (final floor; current v1.6 behavior)
 
 Full decision tree: [`wiki/references/transport-fallback.md`](../../wiki/references/transport-fallback.md). DragonScale Mechanism 3 tiling lint is a separate code path (Python script) and bypasses transport selection.
 

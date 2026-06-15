@@ -1,6 +1,9 @@
 # MCP Setup
 
-MCP lets Claude read and write vault notes directly without copy-paste. Four options ordered from simplest to most featureful.
+> [!note] Vendor-specific commands
+> This guide retains the `claude mcp ...` CLI commands as written for upstream Claude Code users. **Copilot CLI users**: the MCP server itself (REST-API plugin / mcpvault binary) works identically; the registration command differs. Consult Copilot CLI docs for the equivalent of `claude mcp add-json` — usually a `~/.copilot/config` entry or `copilot mcp ...` subcommand. The Obsidian-side install steps are agent-agnostic.
+
+MCP lets the agent read and write vault notes directly without copy-paste. Four options ordered from simplest to most featureful.
 
 > [!tip] Recommendation
 > If you have **Obsidian v1.12 or newer**, start with **Option D: Obsidian CLI**. It needs no MCP server, no plugins, and no TLS workarounds. Use Options A or B only if you need persistent MCP integration or are on an older Obsidian version.
@@ -9,7 +12,7 @@ MCP lets Claude read and write vault notes directly without copy-paste. Four opt
 
 ## Step 1: Install the Local REST API Plugin
 
-You must do this in Obsidian (Claude cannot do it programmatically):
+You must do this in Obsidian (the agent cannot do it programmatically):
 
 1. Obsidian > Settings > Community Plugins > Turn off Restricted Mode
 2. Browse > Search "Local REST API" > Install > Enable
@@ -77,7 +80,7 @@ No MCP needed. Use curl in bash throughout the session. See `rest-api.md` for al
 
 ## Option D: Obsidian CLI (recommended for v1.12+)
 
-Obsidian shipped a native CLI in v1.12 (2026). It exposes vault operations directly to the terminal. No REST API plugin, no MCP server, no self-signed certs, no TLS workarounds. Claude calls it through the Bash tool.
+Obsidian shipped a native CLI in v1.12 (2026). It exposes vault operations directly to the terminal. No REST API plugin, no MCP server, no self-signed certs, no TLS workarounds. the agent calls it through the Bash tool.
 
 **Check if available:**
 ```bash
@@ -116,7 +119,7 @@ The `kepano/obsidian-skills` repo includes an `obsidian-cli` skill that wraps th
 
 ## Use `--scope user`
 
-Both MCP options use `--scope user` so the vault is available across all Claude Code projects, not just the one where you ran the command.
+Both MCP options use `--scope user` so the vault is available across all Copilot CLI projects, not just the one where you ran the command.
 
 ---
 
@@ -129,6 +132,6 @@ claude mcp list               # confirm the server appears
 claude mcp get obsidian-vault # confirm the path or URL is correct
 ```
 
-In a Claude Code session, type `/mcp` to check connection status.
+In a Copilot CLI session, type `/mcp` to check connection status.
 
 Then test: "List all notes in my wiki folder."

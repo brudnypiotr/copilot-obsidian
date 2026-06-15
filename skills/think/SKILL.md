@@ -1,6 +1,6 @@
 ---
 name: think
-description: "Apply the 10-principle thinking loop (OBSERVE-OBSERVE-LISTEN-THINK-CONNECT-CONNECT-FEEL-ACCEPT-CREATE-GROW) to any non-trivial problem. Walks Claude through external observation, metacognition, active listening, first-principles analysis, lateral connection, system orchestration, intuition, intellectual humility, generative output, and iterative growth. Triggers on: think this through, 10-principle review, /think, OBSERVE LISTEN THINK, deep think, systematic thinking, structured reasoning, walk this through, audit my thinking, am I thinking about this right."
+description: "Apply the 10-principle thinking loop (OBSERVE-OBSERVE-LISTEN-THINK-CONNECT-CONNECT-FEEL-ACCEPT-CREATE-GROW) to any non-trivial problem. Walks the agent through external observation, metacognition, active listening, first-principles analysis, lateral connection, system orchestration, intuition, intellectual humility, generative output, and iterative growth. Triggers on: think this through, 10-principle review, /think, OBSERVE LISTEN THINK, deep think, systematic thinking, structured reasoning, walk this through, audit my thinking, am I thinking about this right."
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
@@ -174,7 +174,7 @@ For each stage, answer these questions before moving to the next:
 - What worked well in this cycle?
 - What would I do differently next time?
 - What inputs feed v_next?
-- Where should this lesson be stored so future-me does not have to re-derive it? (Wiki page? Memory? CLAUDE.md? Audit doc?)
+- Where should this lesson be stored so future-me does not have to re-derive it? (Wiki page? Memory? COPILOT.md? Audit doc?)
 
 ---
 

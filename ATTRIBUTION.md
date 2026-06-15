@@ -1,6 +1,8 @@
 # Attributions
 
-claude-obsidian is an original work. The following third-party patterns, tools, and creators informed its design.
+copilot-obsidian is a fork of [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian) v1.9.2, rebranded and stripped for GitHub Copilot CLI compatibility. The upstream is the canonical work; this fork inherits its MIT license. See the section at the bottom for full upstream attribution.
+
+The following third-party patterns, tools, and creators informed the upstream's design and are inherited unchanged.
 
 ---
 
@@ -8,7 +10,7 @@ claude-obsidian is an original work. The following third-party patterns, tools, 
 
 **Author:** Andrej Karpathy
 **Source:** https://github.com/karpathy
-**Use:** The core architecture of claude-obsidian — using an LLM to build and maintain a structured wiki from raw sources — is based on the LLM Wiki pattern Karpathy described publicly. claude-obsidian is an independent implementation; no code or content from Karpathy's repositories was copied.
+**Use:** The core architecture — using an LLM to build and maintain a structured wiki from raw sources — is based on the LLM Wiki pattern Karpathy described publicly. The upstream `claude-obsidian` (and this fork) are independent implementations; no code or content from Karpathy's repositories was copied.
 
 ---
 
@@ -40,9 +42,12 @@ The following Obsidian community plugins ship with this vault as pre-installed b
 
 ---
 
-## claude-obsidian
+## claude-obsidian (upstream)
 
 **Author:** AgriciDaniel / AI Marketing Hub
 **License:** MIT (see [LICENSE](LICENSE))
 **Repository (public canonical):** https://github.com/AgriciDaniel/claude-obsidian
 **Community early-access mirror (Pro):** https://github.com/AI-Marketing-Hub
+**Version this fork was derived from:** v1.9.2 (2026-05-27)
+
+This fork inherits the MIT license and credits AgriciDaniel as the original author of every file not explicitly modified or added by this fork. Modifications by this fork are listed in [`CHANGELOG.md`](CHANGELOG.md) under `[1.0.0]`.

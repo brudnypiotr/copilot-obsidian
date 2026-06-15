@@ -17,7 +17,7 @@ Before mutating any vault file, consult `.vault-meta/transport.json` (auto-creat
 
 - **cli** — `obsidian-cli write "$VAULT" "$NOTE" < content.md` (or `append`, `property:set`); see [`skills/wiki-cli/SKILL.md`](../wiki-cli/SKILL.md)
 - **mcp-obsidian** / **mcpvault** — `mcp__obsidian-vault__write_note` and friends; see [`skills/wiki/references/mcp-setup.md`](../wiki/references/mcp-setup.md)
-- **filesystem** — Claude's `Write`/`Edit` tools with absolute vault-rooted paths (final floor; always works)
+- **filesystem** — the agent's `Write`/`Edit` tools with absolute vault-rooted paths (final floor; always works)
 
 Full decision tree: [`wiki/references/transport-fallback.md`](../../wiki/references/transport-fallback.md).
 
@@ -140,7 +140,7 @@ Trigger: user passes an image file path (`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp
 
 Steps:
 
-1. **Read** the image file using the Read tool. Claude can process images natively.
+1. **Read** the image file using the Read tool. the agent can process images natively.
 2. **Describe** the image contents: extract all text (OCR), identify key concepts, entities, diagrams, and data visible in the image.
 3. **Save** the description to `.raw/images/[slug]-[YYYY-MM-DD].md`:
    ```markdown
@@ -333,7 +333,7 @@ On a page rename, the skill must update the `address_map` key (old path -> new p
 
 ### Concurrency policy
 
-- **Single-writer only** in Phase 2. Do not run parallel ingests from multiple Claude sessions or sub-agents that assign addresses. The `flock` in the helper prevents counter corruption but does not serialize page writes themselves.
+- **Single-writer only** in Phase 2. Do not run parallel ingests from multiple agent sessions or sub-agents that assign addresses. The `flock` in the helper prevents counter corruption but does not serialize page writes themselves.
 - Sub-agents (codex, general-purpose) that are dispatched for research or review MUST NOT call the allocator. They are read-only in this respect.
 - Multi-writer support is a deferred feature.
 
@@ -359,3 +359,18 @@ When working on this skill, apply the 10-principle loop. See [`skills/think/SKIL
 | 8 | ACCEPT | Not every claim is wiki-worthy. Editorial judgment is part of ingest, not a bug to remove. |
 | 9 | CREATE | Source + entity + concept pages with full frontmatter; cross-references; contradiction callouts where needed. |
 | 10 | GROW | Contradictions found mid-ingest are the most valuable wiki signal. File them as questions for follow-up, not silently. |
+
+## Commit pattern (replaces removed PostToolUse hook)
+
+The upstream Claude Code `PostToolUse` hook auto-committed wiki/ changes after every Write/Edit. This fork strips that hook and embeds the commit pattern here. After any write to a wiki page (Write/Edit tools used above), run:
+
+```bash
+bash scripts/wiki-lock.sh acquire <page-path>
+# ... write completes above via Write/Edit tools ...
+git add -- wiki/ .raw/ .vault-meta/ 2>/dev/null
+git diff --cached --quiet -- wiki/ .raw/ .vault-meta/ || \
+  git commit -m "wiki: $(date '+%Y-%m-%d %H:%M')" -- wiki/ .raw/ .vault-meta/
+bash scripts/wiki-lock.sh release <page-path>
+```
+
+Skip the commit if `.vault-meta/auto-commit.disabled` exists (user opt-out).
