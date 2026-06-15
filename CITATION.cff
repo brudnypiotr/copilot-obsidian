@@ -4,9 +4,9 @@ message: >-
   If you use this software, please cite it using the metadata from this file.
 type: software
 authors:
-  - alias: niumfi
-repository-code: 'https://github.com/niumfi/copilot-obsidian'
-url: 'https://github.com/niumfi/copilot-obsidian'
+  - alias: brudnypiotr
+repository-code: 'https://github.com/brudnypiotr/copilot-obsidian'
+url: 'https://github.com/brudnypiotr/copilot-obsidian'
 license: MIT
 version: 1.0.0
 date-released: '2026-06-15'

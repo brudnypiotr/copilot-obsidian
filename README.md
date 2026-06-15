@@ -39,12 +39,12 @@ Prerequisites: [`gh` CLI](https://cli.github.com/), [GitHub Copilot CLI extensio
 
 **Option 1 — direct install from GitHub:**
 ```bash
-copilot plugin install niumfi/copilot-obsidian
+copilot plugin install brudnypiotr/copilot-obsidian
 ```
 
 **Option 2 — local clone install (for development or pinning a specific commit):**
 ```bash
-git clone https://github.com/niumfi/copilot-obsidian
+git clone https://github.com/brudnypiotr/copilot-obsidian
 cd copilot-obsidian
 copilot plugin install ./
 ```

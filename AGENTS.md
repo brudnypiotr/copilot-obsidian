@@ -59,7 +59,7 @@ When the user opens this project for the first time:
 
 ## Reference
 
-- Plugin homepage (this fork): https://github.com/niumfi/copilot-obsidian
+- Plugin homepage (this fork): https://github.com/brudnypiotr/copilot-obsidian
 - Upstream (Claude Code native): https://github.com/AgriciDaniel/claude-obsidian
 - Pattern source: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 - Cross-reference: https://github.com/kepano/obsidian-skills (authoritative Obsidian-specific skills)

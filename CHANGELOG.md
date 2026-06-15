@@ -9,7 +9,7 @@ Forked from [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/cla
 ### Rebranded
 
 - Plugin name `claude-obsidian` → `copilot-obsidian`. Manifest moved from `.claude-plugin/plugin.json` to `plugin.json` at the repository root (Copilot CLI preferred discovery location). Version restarted at `1.0.0` (fresh semver for the fork; upstream continues independently).
-- Author / homepage / repository: `niumfi/copilot-obsidian`. License: MIT (inherited).
+- Author / homepage / repository: `brudnypiotr/copilot-obsidian`. License: MIT (inherited).
 - Agent files renamed `agents/*.md` → `agents/*.agent.md` per Copilot CLI's documented convention.
 - ~25 lines of prose across `skills/` and `commands/` neutralized from Claude-Code-specific language to agent-agnostic phrasing (e.g. "Claude's `Write` tool" → "the agent's `Write` tool", "Any Claude Code project" → "Any Copilot CLI project"). Citations (Anthropic Sept 2024 contextual retrieval), retrieval-pipeline tier names ("Anthropic API tier 1"), and competitive-positioning prose ("no other Claude+Obsidian competitor ships...") retained as factual references.
 
