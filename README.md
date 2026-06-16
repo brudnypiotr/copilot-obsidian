@@ -1,6 +1,6 @@
 # copilot-obsidian: Self-Organizing AI Second Brain for Obsidian + GitHub Copilot CLI
 
-> 🍴 **Forked from [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian)** v1.9.2 (MIT). The upstream targets Claude Code natively. This fork is **rebranded and stripped for [GitHub Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-cli-plugins)**. Both share the same MIT license and the same core architecture.
+> 🍴 **Forked from [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian)** v1.9.2 (MIT). Rebranded and stripped for [GitHub Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-cli-plugins). Same MIT license, same core architecture.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub Copilot CLI](https://img.shields.io/badge/GitHub_Copilot_CLI-plugin-181717)](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference)
@@ -17,8 +17,9 @@ Based on [Andrej Karpathy's LLM Wiki pattern](https://gist.github.com/karpathy/4
 
 - [What It Does](#what-it-does)
 - [Install (GitHub Copilot CLI)](#install-github-copilot-cli)
-- [Hooks: replaced by standing instructions](#hooks-replaced-by-standing-instructions)
+- [Standing instructions + commit pattern](#standing-instructions--commit-pattern)
 - [Manual workflow (3 things)](#manual-workflow-3-things)
+- [Refreshing after a plugin update](#refreshing-after-a-plugin-update)
 - [Skills](#skills)
 - [Vault Structure](#vault-structure)
 - [Optional Features](#optional-features)
@@ -64,9 +65,9 @@ copilot                              # launch a session
 
 Open the directory in Obsidian (File → Open vault → select this directory).
 
-## Hooks: replaced by standing instructions
+## Standing instructions + commit pattern
 
-The upstream `claude-obsidian` shipped 4 Claude Code hooks (`SessionStart`, `PostCompact`, `PostToolUse`, `Stop`) that automated context restoration, auto-commits, and hot-cache prompts. Copilot CLI does not document equivalent hook event names, so this fork **strips them** and replaces their behavior in two ways:
+Context restoration, auto-commits, and hot-cache prompts are wired in two layers:
 
 1. **Passive behaviors → standing instructions in [`COPILOT.md`](COPILOT.md)** (loaded by Copilot as session context). Hot-cache load on session start, re-load after compaction, prompt to update hot-cache at session end, stale-lock reaper.
 2. **Active behavior (auto-commit after wiki writes) → inline `bash` in 4 mutating skills** (`save`, `wiki-ingest`, `wiki-fold`, `autoresearch`). Each runs `wiki-lock acquire → git add+commit → release` at the end of its body.
@@ -80,6 +81,22 @@ A short list of things that remain user-initiated even with the standing instruc
 1. **Lock cleanup after a crashed session** — `bash scripts/wiki-lock.sh clear-stale --max-age 3600`
 2. **Forced hot-cache reload if the agent ignored the standing instruction** — say "read wiki/hot.md to restore context"
 3. **End-of-day hot-cache update if the session ended abruptly** — say "update wiki/hot.md to reflect today's work"
+
+## Refreshing after a plugin update
+
+Copilot CLI direct-installs are a frozen tarball cache at `~/.copilot/installed-plugins/_direct/<name>/`. Running `git pull` on the source repo does NOT update what Copilot serves. After every plugin release (or local commit you want to test), uninstall + reinstall:
+
+```bash
+bash bin/refresh-install.sh             # uninstalls then reinstalls from $PWD
+# or, with an explicit path:
+bash bin/refresh-install.sh /path/to/copilot-obsidian
+```
+
+Verify: `copilot plugin list` should show the new version.
+
+## Multi-user / Windows posture
+
+This fork is natively POSIX (Linux / macOS / WSL2). Multi-user setups follow a **Single Writer, Multiple Readers (SWMR)** topology: one WSL2 host runs Copilot CLI and mutates the vault; everyone else opens the same directory in Obsidian as a reader. See [`docs/architecture/windows-and-multi-user.md`](docs/architecture/windows-and-multi-user.md) for the full posture, the Unix-isms that block multi-writer over SMB/OneDrive, and the deferred work for a native Windows writer.
 
 ## Skills
 
@@ -171,7 +188,7 @@ This fork inherits the MIT license and credits [`AgriciDaniel/claude-obsidian`](
 
 For all changes prior to the fork (v1.0.0 through v1.9.2 of `claude-obsidian`), see the upstream's [CHANGELOG.md](https://github.com/AgriciDaniel/claude-obsidian/blob/main/CHANGELOG.md).
 
-If you want the **Claude Code native** version with all 4 hooks intact and the multi-vendor (Cursor, Windsurf, OpenCode) installer, install the upstream directly.
+For the native multi-agent version (Claude Code hooks intact, Cursor / Windsurf / OpenCode installers included), install the upstream directly.
 
 ## License
 

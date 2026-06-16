@@ -2,7 +2,7 @@
 
 This folder is both a GitHub Copilot CLI plugin and an Obsidian vault.
 
-**Plugin name:** `copilot-obsidian` (v1.0.0)
+**Plugin name:** `copilot-obsidian` (v1.1.0)
 **Skills:** 15 (see registry below)
 **Vault path:** This directory (open in Obsidian directly)
 **Forked from:** [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian) v1.9.2 (MIT)
@@ -30,9 +30,9 @@ Run `/wiki` to scaffold a new vault or check setup status.
 
 Run "lint the wiki" every 10-15 ingests to catch orphans and gaps.
 
-## Standing Session Instructions (replace removed Claude Code hooks)
+## Standing Session Instructions
 
-The upstream plugin used Claude Code hooks (`SessionStart`, `PostCompact`, `PostToolUse`, `Stop`) to automate context restoration, auto-commits, and hot-cache prompts. This fork strips them because Copilot CLI does not document equivalent hook event names. Their behavior is replaced by these standing instructions, which Copilot CLI loads as session context from `COPILOT.md`:
+Copilot CLI loads `COPILOT.md` as session context. The following four instructions reproduce the passive context-management behavior the upstream achieved via hooks. They are not auto-magic; Copilot follows them as it would any other instruction in the loaded prompt:
 
 1. **Session start**: If `wiki/hot.md` exists in the current directory, read it silently to restore recent context. Do not announce the read.
 2. **After a context compaction**: Re-read `wiki/hot.md` if it exists. Hook-injected context does not survive compaction; this instruction does.
@@ -41,9 +41,9 @@ The upstream plugin used Claude Code hooks (`SessionStart`, `PostCompact`, `Post
 
 See `MANUAL.md` for the 3 things that remain user-initiated even with these instructions.
 
-## How Writes Commit (replaces removed PostToolUse hook)
+## How Writes Commit
 
-The upstream PostToolUse hook auto-committed wiki/ changes after every Write/Edit. This fork moves that responsibility into the body of each mutating skill (`save`, `wiki-ingest`, `wiki-fold`, `autoresearch`). Each ends with a bash block:
+Auto-commit of `wiki/` changes after every write is the responsibility of each mutating skill (`save`, `wiki-ingest`, `wiki-fold`, `autoresearch`). Each ends with a bash block:
 
 ```bash
 bash scripts/wiki-lock.sh acquire <page-path>

@@ -1,6 +1,6 @@
-# Contributing to claude-obsidian
+# Contributing to copilot-obsidian
 
-Thanks for your interest in improving this plugin. claude-obsidian is a small, focused project; contributions that match its philosophy land quickly.
+Thanks for your interest in improving this fork. copilot-obsidian is a small, focused Copilot CLI plugin; contributions that match its philosophy land quickly.
 
 ## Philosophy
 
@@ -10,7 +10,7 @@ Three constraints shape every change:
 2. **Smallest unit that works.** No speculative abstraction. Complexity is earned, not anticipated. Three real callers minimum before an abstraction lands.
 3. **Failure is the spec.** Every new failure mode needs explicit handling. Untrusted input, network calls, and state changes need an explicit blast-radius answer.
 
-The full kernel lives in [`/best-practices`](https://github.com/AgriciDaniel/best-practices) (composable Claude Code skill). The pre-commit verifier agent at [`agents/verifier.md`](agents/verifier.md) enforces it for non-trivial changes.
+The pre-commit verifier agent at [`agents/verifier.agent.md`](agents/verifier.agent.md) enforces the kernel for non-trivial changes.
 
 ## Workflow
 
@@ -24,21 +24,19 @@ For typo fixes, doc clarifications, or single-line changes, skip straight to a P
 
 ### 2. Fork + branch
 
-Contributions are accepted on the public canonical repo. Fork [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian) on GitHub, then:
+PRs land on this fork's repo. Fork [`brudnypiotr/copilot-obsidian`](https://github.com/brudnypiotr/copilot-obsidian) on GitHub, then:
 
 ```bash
-git clone https://github.com/<your-username>/claude-obsidian.git
-cd claude-obsidian
+git clone https://github.com/<your-username>/copilot-obsidian.git
+cd copilot-obsidian
 git checkout -b your-feature-name
 ```
 
-> ℹ️ The public repo (`AgriciDaniel/claude-obsidian`) is the canonical source of truth. Raise all PRs against it. AI Marketing Hub Pro members working from the early-access mirror (`AI-Marketing-Hub/claude-obsidian`) should target the public canonical too, so contributions land in one place.
+> ℹ️ If your change is upstream-architectural (touches the core LLM Wiki pattern, the lock layer, the retrieval pipeline, the methodology modes, or DragonScale), consider raising it against the upstream [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian) instead — the fix benefits both projects. This fork merges upstream periodically.
 
 Branch names: `fix/...`, `feat/...`, `docs/...`, `refactor/...`.
 
 ### 3. Set up locally
-
-The plugin runs anywhere Claude Code runs. For development:
 
 ```bash
 # Run the hermetic test suite — required before submitting a PR
@@ -61,7 +59,7 @@ Follow the six-cut kernel:
 - Evidence over intuition (tests for new behavior)
 - Failure-mode + undo plan documented
 
-If you add a new skill, agent, script, or hook, also add a test under `tests/`. The 9 hermetic test suites are the project's safety net.
+If you add a new skill, agent, or script, also add a test under `tests/`. The hermetic test suites are the project's safety net.
 
 ### 5. Run the tests
 
@@ -69,18 +67,11 @@ If you add a new skill, agent, script, or hook, also add a test under `tests/`. 
 make test
 ```
 
-All 9 suites must pass (~1240 assertions). Tests are hermetic: no network, no ollama, no Anthropic API. If your change adds a network call, gate it behind a `--consent`/`--allow-egress`/env-var pattern matching `scripts/contextual-prefix.py` or `scripts/tiling-check.py`.
+All suites must pass. Tests are hermetic: no network, no ollama, no API calls. If your change adds a network call, gate it behind a `--consent`/`--allow-egress`/env-var pattern matching `scripts/contextual-prefix.py` or `scripts/tiling-check.py`.
 
 ### 6. Run the verifier (optional but recommended)
 
-For multi-file changes:
-
-```bash
-# After git add, before git commit, dispatch the verifier agent
-# (Claude Code: invoke agents/verifier.md on the staged diff)
-```
-
-The verifier applies the six-cut + agent kernel to your staged diff and returns findings in BLOCKER / HIGH / MEDIUM / LOW tiers. Address BLOCKER + HIGH before committing.
+For multi-file changes, after `git add` but before `git commit`, dispatch the verifier agent (`agents/verifier.agent.md`) on the staged diff. The verifier applies the six-cut + agent kernel and returns findings in BLOCKER / HIGH / MEDIUM / LOW tiers. Address BLOCKER + HIGH before committing.
 
 ### 7. Commit
 
@@ -94,30 +85,9 @@ Commit message convention (Conventional Commits):
 
 Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `style`.
 
-Example:
-```
-fix(wiki-mode): close path-traversal in route_path safe_name
-
-Sanitize routing input via safe_name() before string-concat into
-the vault-relative path. Adds 9 hermetic test assertions for traversal
-vectors. Closes audit finding S1.
-```
-
 ### 8. Update CHANGELOG.md
 
-Add an entry under `## [Unreleased]` (create the section if needed). Follow the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format:
-
-```markdown
-## [Unreleased]
-
-### Added
-- Description of new feature
-
-### Fixed
-- Description of bug fix
-```
-
-The maintainer will move your entry to a versioned section at release time.
+Add an entry under `## [Unreleased]` (create the section if needed). Follow the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ### 9. Open a PR
 
@@ -135,8 +105,6 @@ PRs are reviewed against the kernel. Expect feedback on naming, scope, and failu
 - **Fast.** The full suite runs in under a minute.
 - **Deterministic.** Same input → same output, every time.
 - **Documented.** Every test asserts a named behavior, not a coincidence.
-
-If you can't make your test hermetic, ask in the issue whether a mocked alternative is acceptable.
 
 ## What we will NOT merge
 

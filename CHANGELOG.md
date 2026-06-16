@@ -2,6 +2,34 @@
 
 All notable changes to copilot-obsidian. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.0] - 2026-06-16
+
+Copilot-only cleanup release. The v1.0.0 fork stripped vendor-specific scaffolding (`.cursor/`, `.windsurf/`, `CLAUDE.md`, `GEMINI.md`, `.claude-plugin/`, `bin/setup-multi-agent.sh`) but left ~15 stale references to other agent ecosystems sprinkled across documentation and a few user-facing strings. This release closes the remaining identity gap, ships a documented install-refresh ritual for Copilot's frozen-tarball cache, and codifies the supported multi-user posture.
+
+### Removed
+
+- `AGENTS.md` Codex CLI / OpenCode symlink instructions. The fork supports Copilot CLI only; AGENTS.md is now a ~10-line sign-post pointing to upstream for multi-agent use.
+- `CONTRIBUTING.md` AI Marketing Hub Pro early-access mirror block. PRs against this fork target `brudnypiotr/copilot-obsidian`; architectural changes are routed to upstream.
+- `.obsidian/app.json` `userIgnoreFilters` entries `hooks/` and `CLAUDE.md` (neither exists in the fork).
+
+### Changed
+
+- `PRIVACY.md`, `SECURITY.md`, `CONTRIBUTING.md`, `COPILOT.md`, `MANUAL.md` — all references to "Claude Code", "claude-obsidian", and `hooks/hooks.json` updated to "Copilot CLI", "copilot-obsidian", and the skill-internal commit pattern that replaced the hooks at v1.0.0.
+- `README.md` — drop "if you want Claude Code, use upstream" mid-doc digressions; keep a single one-line pointer in the upstream-attribution section.
+- `bin/setup-vault.sh` — final bootstrap instruction now says "Type /wiki in Copilot CLI" (was "in Claude Code").
+- `docs/install-guide.md` — full rewrite (254 → 82 lines). Drops the AI Marketing Hub Pro mirror flow, the Anthropic plugin-marketplace add command, and the multi-vendor install variants. Adds the refresh-install section.
+- `SECURITY.md` security contact updated to the fork maintainer.
+
+### Added
+
+- `bin/refresh-install.sh` — one-shot wrapper around `copilot plugin uninstall && copilot plugin install`. Closes the v1.0.1 paradox where a correctly-released fix did not surface in-session because Copilot CLI cached the older direct-install tarball. The script is documented in README, MANUAL.md, and the install guide.
+- `MANUAL.md` "Refreshing the plugin after a release" + "Operating environment" sections.
+- `docs/architecture/windows-and-multi-user.md` — official Single Writer, Multiple Readers (SWMR) posture for cross-platform / multi-user deployments. Inventories the Unix-isms (`flock` over SMB, PID-based liveness, clock-skew stale-detection, `fcntl` Python imports) that block multi-writer over OneDrive / Dropbox / SMB, and defers the native Windows writer port as multi-week work not on the roadmap. Doc-only; no code changes to the lock or retrieval layers.
+
+### Notes
+
+- The 5.3 MB `wiki/` directory of upstream's own working notes remains in the repo as historical archaeology, per user decision. It is not consumed by the Copilot plugin manifest and does not ship into end-user vaults. Grep matches for "skool.com" / "AI Marketing Hub" inside `wiki/meta/` and `wiki/concepts/` are expected.
+
 ## [1.0.1] - 2026-06-16
 
 Post-install audit patch. The v1.0.0 prose audit caught Claude-Code identity strings but missed two upstream community-marketing artifacts that surfaced when scaffolding the first real vault under Copilot CLI.

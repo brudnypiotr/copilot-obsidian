@@ -1,6 +1,6 @@
 # MANUAL.md — What runs by hand under Copilot CLI
 
-This fork strips the 4 Claude Code hooks (`SessionStart`, `PostCompact`, `PostToolUse`, `Stop`) because GitHub Copilot CLI does not document equivalent hook event names. Most of their behavior is reproduced via:
+This fork does not ship Claude Code hooks (they were stripped during the v1.0.0 rebrand because Copilot CLI does not document equivalent hook event names). Their behavior is reproduced via:
 
 - **Standing instructions in [`COPILOT.md`](./COPILOT.md)** (passive — Copilot loads it as session context)
 - **Inline `bash` in mutating skills** `save`, `wiki-ingest`, `wiki-fold`, `autoresearch` (active — runs as part of the skill)
@@ -43,6 +43,30 @@ update wiki/hot.md to reflect the last N days of work
 ```
 
 The agent reads recent git log + the current `wiki/hot.md`, then overwrites with a fresh summary (under 500 words, factual, not a journal).
+
+## 4. Refreshing the plugin after a release
+
+Copilot CLI direct-installs are stored as a frozen tarball under `~/.copilot/installed-plugins/_direct/copilot-obsidian-fork/`. Running `git pull` on the source clone does NOT update that copy — Copilot keeps serving whatever was installed.
+
+**When**: after every `copilot-obsidian` release you want to pick up, or after a local commit you want to test in-session.
+
+**How**:
+```bash
+bash bin/refresh-install.sh                # uses $PWD as the source
+# or, with an explicit path:
+bash bin/refresh-install.sh /path/to/copilot-obsidian
+```
+
+Verify:
+```bash
+copilot plugin list                        # should show the new version
+```
+
+This script is a 5-line wrapper around `copilot plugin uninstall copilot-obsidian && copilot plugin install <path>`. Read it before running.
+
+## Operating environment
+
+This fork is natively POSIX (Linux / macOS / WSL2). On Windows, run Copilot CLI inside WSL2 — the bash scripts in `scripts/` and the `fcntl`-based Python locks in the retrieval / DragonScale layers are Unix-only. Multi-user setups follow a **Single Writer, Multiple Readers** topology: see [`docs/architecture/windows-and-multi-user.md`](docs/architecture/windows-and-multi-user.md).
 
 ## Everything else runs automatically
 
