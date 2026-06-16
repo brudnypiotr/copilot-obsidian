@@ -2,6 +2,12 @@
 
 All notable changes to copilot-obsidian. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.1] - 2026-06-16
+
+### Fixed
+
+- `skills/wiki/SKILL.md` SCAFFOLD operation now declares an explicit scope constraint before its 10 steps: "Only inspect files inside the current working directory. Do NOT scan parent directories, `$HOME`, or use broad `find` / `glob` patterns rooted outside `$PWD`." Live test under Copilot CLI v1.0.63 showed the agent issuing `find /Users/<user> -name "vault" -o -name ".obsidian" -o -name "COPILOT.md"` during scaffold setup — a home-directory crawl rightly rejected by the user. The skill prose did not previously forbid it; now it does.
+
 ## [1.1.0] - 2026-06-16
 
 Copilot-only cleanup release. The v1.0.0 fork stripped vendor-specific scaffolding (`.cursor/`, `.windsurf/`, `CLAUDE.md`, `GEMINI.md`, `.claude-plugin/`, `bin/setup-multi-agent.sh`) but left ~15 stale references to other agent ecosystems sprinkled across documentation and a few user-facing strings. This release closes the remaining identity gap, ships a documented install-refresh ritual for Copilot's frozen-tarball cache, and codifies the supported multi-user posture.

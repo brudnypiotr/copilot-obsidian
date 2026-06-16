@@ -1,6 +1,6 @@
 {
   "name": "copilot-obsidian",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "GitHub Copilot CLI + Obsidian knowledge companion. Persistent compounding wiki vault (Karpathy's LLM Wiki pattern). 15 skills: ingest sources, query the vault, lint health, save conversations, autoresearch loops, hybrid retrieval (BM25 + cosine rerank), methodology modes (LYT / PARA / Zettelkasten / Generic), Obsidian canvas, Bases. Forked from AgriciDaniel/claude-obsidian v1.9.2.",
   "author": {
     "name": "brudnypiotr",

@@ -115,6 +115,8 @@ Route to the correct operation based on what the user says:
 
 Trigger: user describes what the vault is for.
 
+**Scope constraint (read before any filesystem inspection):** Only inspect files inside the current working directory. Do NOT scan parent directories, `$HOME`, or use broad `find` / `glob` patterns rooted outside `$PWD`. The user's home directory is not yours to crawl. If you need to know whether a vault already exists, run `ls -la` inside the cwd only — anything `find /Users/...` or `find ~/` is out of bounds and will be rejected.
+
 Steps:
 
 1. Determine the wiki mode. Read `references/modes.md` to show the 6 options and pick the best fit.
