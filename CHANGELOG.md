@@ -2,6 +2,20 @@
 
 All notable changes to copilot-obsidian. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.2] - 2026-06-16
+
+### Removed
+
+- `wiki/` directory — 5.3 MB of upstream's (AgriciDaniel) working notes: canvases, meta logs, Pro Hub Challenge concept page, claude-seo session notes, tiling reports, ecosystem-research source. In v1.1.0 the user decision was to keep it as "historical archaeology"; that decision was correct under the Workflow B install model (Copilot plugin install + separate vault dir), where `wiki/` never reached the end-user vault. Under Workflow A (clone-as-vault — the upstream-documented happy path that opt-in setup scripts assume), the `wiki/` folder DOES land in the user's Obsidian vault, polluting the sidebar and graph view with content the user did not author. Strip is the right call for Workflow A; history remains in git log v1.0.0..v1.1.1 if ever needed.
+- `.raw/claude-obsidian-ecosystem-research.md` — 13 KB upstream research document. Same archaeology class as `wiki/`; would land in a fresh vault's `.raw/` and prompt the user to ingest unrelated content.
+- `.raw/.manifest.json` — stale ingest-tracking file from the upstream's own vault. Will be re-created on first user ingest.
+
+### Notes
+
+Workflow A bootstrap (clone-as-vault) on a fresh machine is now zero-archaeology: `git clone` → `bin/setup-vault.sh` → `copilot` + `/wiki` lands the user in an empty vault with no upstream content to manually delete.
+
+The grep allow-list in v1.1.0 verification step #1 (excluding `wiki/`) is no longer needed; future cleanup audits can grep without exclusion.
+
 ## [1.1.1] - 2026-06-16
 
 ### Fixed
