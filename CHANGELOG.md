@@ -2,6 +2,18 @@
 
 All notable changes to copilot-obsidian. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.1] - 2026-06-16
+
+Post-install audit patch. The v1.0.0 prose audit caught Claude-Code identity strings but missed two upstream community-marketing artifacts that surfaced when scaffolding the first real vault under Copilot CLI.
+
+### Removed
+
+- `skills/wiki/SKILL.md` "Community Footer" section (the agricidaniel / skool.com promo banner the scaffold operation was instructed to append after major operations). The footer was emitted verbatim at the end of the live vault scaffold test, which is not the fork's brand.
+
+### Fixed
+
+- `skills/wiki/SKILL.md` step 4 of SCAFFOLD: tightened "Create domain pages + `_index.md` sub-indexes" → "Create per-domain `wiki/<domain>/_index.md` sub-indexes (one per domain folder; do NOT create a top-level `wiki/_index/` dir)". The original wording was ambiguous enough that Copilot speculatively created a stray empty `wiki/_index/` directory alongside the correct per-domain `_index.md` files during the live test scaffold.
+
 ## [1.0.0] - 2026-06-15 (initial Copilot CLI fork)
 
 Forked from [`AgriciDaniel/claude-obsidian`](https://github.com/AgriciDaniel/claude-obsidian) v1.9.2 (2026-05-27, MIT). This is a rebrand and strip targeting GitHub Copilot CLI compatibility. The 15-skill knowledge-base architecture, the hybrid retrieval pipeline (BM25 + cosine rerank + contextual prefix), the methodology modes (LYT / PARA / Zettelkasten / Generic), the multi-writer per-file advisory locking, the DragonScale Memory extension, and the 10-principle thinking framework are inherited unchanged.
